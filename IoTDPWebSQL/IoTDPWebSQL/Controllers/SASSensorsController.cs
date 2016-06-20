@@ -36,7 +36,7 @@ namespace IoTDPWebSQL.Controllers
             }
             var st = double.Parse(till);
             var sd = double.Parse(during);
-            specEndTime.Subtract(TimeSpan.FromDays(st));
+            specEndTime = specEndTime.Subtract(TimeSpan.FromDays(st));
             specStartTime = specEndTime.Subtract(TimeSpan.FromDays(sd));
 
             string sql = "select * from SASSensor where time >= @starttime AND time <= @endtime";
