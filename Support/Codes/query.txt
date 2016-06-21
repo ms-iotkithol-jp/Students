@@ -1,0 +1,10 @@
+SELECT msgId, deviceId, temp, brightness, accelx, accely, accelz, time, Longitude, Latitude INTO ThrOutput FROM sensor;
+
+SELECT deviceId as deviceId, msgId, time as time, Avg(temp) as tempAvg, Avg(brightness) as brightnessAvg, 
+AVG(SQRT(POWER(accelx,2)+POWER(accely,2)+POWER(accelz,2))) as AccelScale, Avg(accelx) as accelxAvg, Avg(accely) as accelyAvg, Avg(accelz) as accelzAvg
+INTO ALOutput FROM sensor
+GROUP BY TUMBLINGWINDOW (second,60), time, deviceId, msgId;
+
+SELECT deviceId as deviceId, time as time, accelx, accely, accelz, msgId,
+CASE WHEN temp > 25.0 THEN 'HoT' ELSE 'Cold' END as TempStatus
+INTO MLOutput FROM sensor;
