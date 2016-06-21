@@ -1,0 +1,14 @@
+# Map 1-based optional input ports to variables
+dataset1 <- maml.mapInputPort(1) # class: data.frame
+
+library(plyr)
+
+dmean <- ddply(dataset1,~deviceId,summarise,tempmean=mean(temp))
+d2<-merge(dataset1,dmean,by=c("deviceId"))
+
+dataset1 <-d2
+dataset1$TempStatus <-ifelse(d2$temp > d2$tempmean, "HOT","COOL")
+data.set <- dataset1;
+
+# Select data.frame to be sent to the output Dataset port
+maml.mapOutputPort("data.set");

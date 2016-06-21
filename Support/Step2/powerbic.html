@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link href="visuals.css" rel="stylesheet">
+    <script type="text/javascript" src="powerbi-visuals.all.min.js"></script>  
+    <style>
+        .visual {
+            'background-color' : 'white',
+            'padding' : '10px',
+            'margin' : '5px'
+        }
+    </style>
+</head>
+<body>
+<div class="visual"></div>
+<script>
+    var createDataView = function () {
+        var DataViewTransform = powerbi.data.DataViewTransform;
+
+        var fieldExpr = powerbi.data.SQExprBuilder.fieldExpr({ column: { entity: "table1", name: "country" } });
+
+        var categoryValues = ["Australia", "Canada", "France", "Germany", "United Kingdom", "United States"];
+        var categoryIdentities = categoryValues.map(function (value) {
+            var expr = powerbi.data.SQExprBuilder.equal(fieldExpr, powerbi.data.SQExprBuilder.text(value));
+            return powerbi.data.createDataViewScopeIdentity(expr);
+        });
+
+        // Metadata, describes the data columns, and provides the visual with hints
+        // so it can decide how to best represent the data
+        var dataViewMetadata = {
+            columns: [
+                {
+                    displayName: 'Country',
+                    queryName: 'Country',
+                    type: powerbi.ValueType.fromDescriptor({ text: true })
+                },
+                {
+                    displayName: 'Sales Amount (2014)',
+                    isMeasure: true,
+                    format: "$0",
+                    queryName:'sales1',
+                    type: powerbi.ValueType.fromDescriptor({ numeric: true }),
+                },
+                {
+                    displayName: 'Sales Amount (2013)',
+                    isMeasure: true,
+                    format: "$0",
+                    queryName:'sales2',
+                    type: powerbi.ValueType.fromDescriptor({ numeric: true })
+                }
+            ],
+        };
+
+        var columns = [
+            {
+                source: dataViewMetadata.columns[1],
+                // Sales Amount for 2014
+                values: [742731.43, 162066.43, 283085.78, 300263.49, 376074.57, 814724.34],
+            },
+            {
+                source: dataViewMetadata.columns[2],
+                // Sales Amount for 2013
+                values: [742731.43, 162066.43, 283085.78, 300263.49, 376074.57, 814724.34].reverse()
+            }
+        ];
+
+        var dataValues = DataViewTransform.createValueColumns(columns);
+
+        var dataView = {
+            metadata: dataViewMetadata,
+            categorical: {
+                categories: [{
+                    source: dataViewMetadata.columns[0],
+                    values: categoryValues,
+                    identity: categoryIdentities,
+                }],
+                values: dataValues
+            }
+        };
+
+        return dataView;
+    };
+
+    function createDefaultStyles(){
+        var dataColors = new powerbi.visuals.DataColorPalette();
+
+        return {
+            titleText: {
+                color: { value: 'rgba(51,51,51,1)' }
+            },
+            subTitleText: {
+                color: { value: 'rgba(145,145,145,1)' }
+            },
+            colorPalette: {
+                dataColors: dataColors,
+            },
+            labelText: {
+                color: {
+                    value: 'rgba(51,51,51,1)',
+                },
+                fontSize: '11px'
+            },
+            isHighContrast: false,
+        };
+    }
+
+    function createVisual() {
+        var pluginService = powerbi.visuals.visualPluginFactory.create();
+        var defaultVisualHostServices = powerbi.visuals.defaultVisualHostServices;
+        var width = 600;
+        var height = 400;
+
+        var element = $('.visual');
+        element.height(height).width(width);
+
+
+        // Get a plugin
+        var visual = pluginService.getPlugin('columnChart').create();
+
+        powerbi.visuals.DefaultVisualHostServices.initialize(); 
+
+        visual.init({
+            // empty DOM element the visual should attach to.
+            element: element,
+            // host services
+            host: defaultVisualHostServices,
+            style: createDefaultStyles(),
+            viewport: {
+                height:height,
+                width: width
+            },
+            settings: { slicingEnabled: true },
+            interactivity: { isInteractiveLegend: false, selection: false },
+            animation: { transitionImmediate: true }
+        });
+
+        var dataViews = [createDataView()],
+            viewport = { height: height, width: width };
+
+        if (visual.update) {
+            // Call update to draw the visual with some data
+            visual.update({
+                dataViews: dataViews,
+                viewport: viewport,
+                duration: 0
+            });
+        } else if (visual.onDataChanged && visual.onResizing) {
+            // Call onResizing and onDataChanged (old API) to draw the visual with some data
+            visual.onResizing(viewport);
+            visual.onDataChanged({ dataViews: dataViews });
+        }
+    }
+    createVisual();
+
+</script>
+
+</body>
+</html>

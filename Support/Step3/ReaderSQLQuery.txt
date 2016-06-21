@@ -1,0 +1,1 @@
+select * from SASSensor where time> DATEADD(day, -1, GETDATE())
