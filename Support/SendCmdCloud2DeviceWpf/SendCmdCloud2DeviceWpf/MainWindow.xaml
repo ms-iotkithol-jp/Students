@@ -1,0 +1,57 @@
+﻿<Window x:Class="SendCmdCloud2DeviceWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SendCmdCloud2DeviceWpf"
+        mc:Ignorable="d"
+        Title="Send Command to Device from Cloud" Height="400" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition />
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Connection String:" FontSize="16" Grid.Row="0" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Name="tbConnectionString" FontSize="16" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5" ToolTip="IoT Hubのserviceの接続文字列をコピーペーストしてください"/>
+            <TextBlock Text="Device Id:" FontSize="16" Grid.Row="1" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Name="tbDeviceId" FontSize="16" Grid.Row="1" Grid.Column="1" Text="[Device Id]" HorizontalAlignment="Stretch" Margin="5" ToolTip="IoT Hubに登録済みのDevice Idを入力してください"/>
+            <Button Name="buttonConnect" Content="Connect" Grid.Row="2" Grid.ColumnSpan="2" Margin="5" Click="buttonConnect_Click" ToolTip="IoT Hubに接続します"/>
+        </Grid>
+        <StackPanel Orientation="Horizontal">
+        </StackPanel>
+        <Grid Grid.Row="1" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Name="button0" Content="Black" Background="Black" Grid.Column="0" Grid.Row="0" Foreground="White" Margin="5" Click="Button_Click" IsEnabled="False"/>
+            <Button Name="button1" Content="Red" Background="Red" Grid.Column="0" Grid.Row="1" Foreground="White" Margin="5" Click="Button_Click" IsEnabled="False"/>
+            <Button Name="button2" Content="Green" Background="Green" Grid.Column="0" Grid.Row="2" Foreground="White" Margin="5" Click="Button_Click" IsEnabled="False"/>
+            <Button Name="button3" Content="Yello" Background="Yellow" Grid.Column="0" Grid.Row="3" Foreground="Black" Margin="5" Click="Button_Click" IsEnabled="False"/>
+            <Button Name="button4" Content="Blue" Background="Blue" Grid.Column="1" Grid.Row="0" Foreground="White" Margin="5" Click="Button_Click" IsEnabled="False"/>
+            <Button Name="button5" Content="Magenta" Background="Magenta" Grid.Column="1" Grid.Row="1" Foreground="White" Margin="5" Click="Button_Click" IsEnabled="False"/>
+            <Button Name="button6" Content="Cyan" Background="Cyan" Grid.Column="1" Grid.Row="2" Foreground="Black" Margin="5" Click="Button_Click" IsEnabled="False"/>
+            <Button Name="button7" Content="White" Background="White" Grid.Column="1" Grid.Row="3" Foreground="Black" Margin="5" Click="Button_Click" IsEnabled="False"/>
+        </Grid>
+        <ScrollViewer Grid.Row="2" Margin="5">
+            <RichTextBox Name="rtbStatus"/>
+        </ScrollViewer>
+    </Grid>
+</Window>
